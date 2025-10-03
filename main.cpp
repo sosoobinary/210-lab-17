@@ -29,29 +29,12 @@ int main() {
     output(head);
 
     // deleting a node
-    Node * current = head;
     cout << "Which node to delete? " << endl;
     output(head);
     int entry;
     cout << "Choice --> ";
     cin >> entry;
-
-    // traverse that many times and delete that node
-    current = head;
-    Node *prev = head;
-    for (int i = 0; i < (entry-1); i++)
-        if (i == 0)
-            current = current->next;
-        else {
-            current = current->next;
-            prev = prev->next;
-        }
-    // at this point, delete current and reroute pointers
-    if (current) {  // checks for current to be valid before deleting the node
-        prev->next = current->next;
-        delete current;
-        current = nullptr;
-    }
+    deleteNode(head, entry);
     output(head);
 
     // insert a node
@@ -95,13 +78,13 @@ int main() {
 }
 
 void output(Node * hd) {
-    if (!hd) {
+    if(!hd) {
         cout << "Empty list.\n";
         return;
     }
     int count = 1;
     Node * current = hd;
-    while (current) {
+    while(current) {
         cout << "[" << count++ << "] " << current->value << endl;
         current = current->next;
     }
@@ -112,7 +95,41 @@ void addFront(Node*& hd, float val) {
     Node* newNode = new Node{val, hd};
     hd = newNode;
 }
-void addTail(Node*& hd, float val);
-void deleteNode(Node*& hd, float val);
+void addTail(Node*& hd, float val) {
+    Node* newNode = new Node{val, nullptr};
+    if(!hd) {
+        hd = newNode;
+        return;
+    }
+    Node* current = hd;
+    while(current->next) {
+        current = current->next;
+    }
+    current->next = newNode;
+}
+void deleteNode(Node*& hd, int pos) {
+    if (pos < 1 || !hd) return;
+
+    Node* current = hd;
+
+    if (pos == 1) {
+        hd = hd->next;
+        delete current;
+        return;
+    }
+    Node* prev = nullptr;
+    int count = 1;
+
+    while (current && count < pos) {
+        prev = current;
+        current = current->next;
+        count++;
+    }
+
+    if (current && prev) {
+        prev->next = current->next;
+        delete current;
+    }
+}
 void insertNode(Node*& hd, int pos, float val);
 void deleteList(Node*& hd);
