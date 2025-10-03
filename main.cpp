@@ -38,40 +38,16 @@ int main() {
     output(head);
 
     // insert a node
-    current = head;
     cout << "After which node to insert 10000? " << endl;
-    count = 1;
-    while (current) {
-        cout << "[" << count++ << "] " << current->value << endl;
-        current = current->next;
-    }
+    output(head);
     cout << "Choice --> ";
     cin >> entry;
 
-    current = head;
-    prev = head;
-    for (int i = 0; i < (entry); i++)
-        if (i == 0)
-            current = current->next;
-        else {
-            current = current->next;
-            prev = prev->next;
-        }
-    //at this point, insert a node between prev and current
-    Node * newnode = new Node;
-    newnode->value = 10000;
-    newnode->next = current;
-    prev->next = newnode;
+    insertNode(head, entry, 10000);
     output(head);
 
     // deleting the linked list
-    current = head;
-    while (current) {
-        head = current->next;
-        delete current;
-        current = head;
-    }
-    head = nullptr;
+    deleteList(head);
     output(head);
 
     return 0;
@@ -108,11 +84,11 @@ void addTail(Node*& hd, float val) {
     current->next = newNode;
 }
 void deleteNode(Node*& hd, int pos) {
-    if (pos < 1 || !hd) return;
+    if(pos < 1 || !hd) return;
 
     Node* current = hd;
 
-    if (pos == 1) {
+    if(pos == 1) {
         hd = hd->next;
         delete current;
         return;
@@ -120,16 +96,39 @@ void deleteNode(Node*& hd, int pos) {
     Node* prev = nullptr;
     int count = 1;
 
-    while (current && count < pos) {
+    while(current && count < pos) {
         prev = current;
         current = current->next;
         count++;
     }
 
-    if (current && prev) {
+    if(current && prev) {
         prev->next = current->next;
         delete current;
     }
 }
-void insertNode(Node*& hd, int pos, float val);
-void deleteList(Node*& hd);
+void insertNode(Node*& hd, int pos, float val) {
+    if(pos < 1) return;
+
+    Node* current = hd;
+    int count = 1;
+
+    while(current && count < pos) {
+        current = current->next;
+        count++;
+    }
+
+    if(!current) return;
+
+    Node* newNode = new Node{val, current->next};
+    current->next = newNode;
+}
+void deleteList(Node*& hd) {
+    Node* current = hd;
+    while(current) {
+        Node* nextNode = current->next;
+        delete current;
+        current = nextNode;
+    }
+    hd = nullptr;
+}
